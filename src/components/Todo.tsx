@@ -19,6 +19,13 @@ function TodoList() {
     setInputValue("");
   };
 
+  // Delete Todo
+  const deleteTodo = (i: number) => {
+    const updatedTodos = todos.filter((_, index) => index !== i);
+
+    setTodos(updatedTodos);
+  };
+
   // Save todos to localStorage whenever todos state changes
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -27,7 +34,7 @@ function TodoList() {
   return (
     <>
       <section className="h-screen bg-[url(vite.svg)] flex justify-center items-center">
-        <div className="w-[24rem] space-y-5">
+        <div className="w-[27rem] space-y-5">
           <div className="bg-white p-5 rounded-lg">
             <h1 className="text-2xl font-bold mb-4 text-black/80">
               Smart To-Do List
@@ -56,8 +63,22 @@ function TodoList() {
               <div>
                 <ul>
                   {todos.map((todo, i) => (
-                    <li key={i} className="flex items-center mb-4">
-                      {todo}
+                    <li
+                      key={i}
+                      className="flex justify-between items-center mb-3 shadow-md border px-2 py-2 rounded-md"
+                    >
+                      <div>{todo}</div>
+                      <div className="space-x-2">
+                        <button className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium">
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium"
+                          onClick={() => deleteTodo(i)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
