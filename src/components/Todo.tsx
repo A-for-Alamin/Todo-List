@@ -125,7 +125,7 @@ function TodoList() {
             </p>
           </div>
 
-          <div className="bg-white p-5 rounded-lg">
+          <div className="bg-white p-5 rounded-lg max-h-[30rem] overflow-y-scroll todo-scroll">
             <div className="flex justify-between pb-3 border-b border-gray-600/50">
               <Select
                 className="max-w-[7.6rem]"
