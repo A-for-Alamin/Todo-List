@@ -7,6 +7,7 @@ interface Todo {
 
 function TodoList() {
   const [inputValue, setInputValue] = useState("");
+  const [empty, setEmpty] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const [todos, setTodos] = useState<Todo[]>(() => {
@@ -18,7 +19,7 @@ function TodoList() {
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (inputValue.trim() === "") return;
+    if (inputValue.trim() === "") return setEmpty(true);
 
     if (editIndex !== null) {
       const updatedTodos = todos.map((todo, index) =>
@@ -33,6 +34,7 @@ function TodoList() {
     }
 
     setInputValue("");
+    setEmpty(false);
   };
 
   // Toggle Task
@@ -82,7 +84,13 @@ function TodoList() {
                 Add
               </button>
             </form>
-            <p className="text-xs mt-1 ms-1">Please Enter your task...</p>
+            <p
+              className={`text-xs mt-1 ms-1 ${
+                empty && "text-red-500 font-semibold"
+              }`}
+            >
+              Please Enter your task...
+            </p>
           </div>
 
           <div className="bg-white p-5 rounded-lg">
@@ -105,7 +113,7 @@ function TodoList() {
                         <span
                           className={`${
                             todo.isCompleted
-                              ? "line-through text-gray-500"
+                              ? "line-through text-red-500 font-medium"
                               : "text-black"
                           }`}
                         >
@@ -114,13 +122,13 @@ function TodoList() {
                       </div>
                       <div className="space-x-2">
                         <button
-                          className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium"
+                          className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium text-white"
                           onClick={() => handleEdit(i)}
                         >
                           Edit
                         </button>
                         <button
-                          className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium"
+                          className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium text-white"
                           onClick={() => deleteTodo(i)}
                         >
                           Delete
