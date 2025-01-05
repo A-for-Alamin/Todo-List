@@ -1,28 +1,42 @@
 import { useEffect, useState } from "react";
 
+interface Todo {
+  text: string;
+  isCompleted: boolean;
+}
+
 function TodoList() {
   const [inputValue, setInputValue] = useState("");
 
-  const [todos, setTodos] = useState<string[]>(() => {
+  // Correctly set todos state to use Todo[]
+  const [todos, setTodos] = useState<Todo[]>(() => {
     const savedTodos = localStorage.getItem("todos");
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
 
-  //   Add Todo
+  // Add Todo
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (inputValue.trim() === "") return;
 
-    const updatedTodos = [...todos, inputValue];
+    const newTodo: Todo = { text: inputValue, isCompleted: false };
+    const updatedTodos = [...todos, newTodo];
     setTodos(updatedTodos);
     setInputValue("");
+  };
+
+  // Toggle Task
+  const toggleComplete = (i: number) => {
+    const updatedTodos = todos.map((todo, index) =>
+      index === i ? { ...todo, isCompleted: !todo.isCompleted } : todo
+    );
+    setTodos(updatedTodos);
   };
 
   // Delete Todo
   const deleteTodo = (i: number) => {
     const updatedTodos = todos.filter((_, index) => index !== i);
-
     setTodos(updatedTodos);
   };
 
@@ -53,7 +67,7 @@ function TodoList() {
                 Add
               </button>
             </form>
-            <p className="text-xs mt-1 ms-1">Please Inter your task...</p>
+            <p className="text-xs mt-1 ms-1">Please Enter your task...</p>
           </div>
 
           <div className="bg-white p-5 rounded-lg">
@@ -67,9 +81,24 @@ function TodoList() {
                       key={i}
                       className="flex justify-between items-center mb-3 shadow-md border px-2 py-2 rounded-md"
                     >
-                      <div>{todo}</div>
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          type="checkbox"
+                          checked={todo.isCompleted}
+                          onChange={() => toggleComplete(i)}
+                        />
+                        <span
+                          className={`${
+                            todo.isCompleted
+                              ? "line-through text-gray-500"
+                              : "text-black"
+                          }`}
+                        >
+                          {todo.text}
+                        </span>
+                      </div>
                       <div className="space-x-2">
-                        <button className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium">
+                        <button className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium">
                           Edit
                         </button>
                         <button
