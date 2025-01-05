@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 interface Todo {
   text: string;
   isCompleted: boolean;
@@ -50,8 +49,6 @@ function TodoList() {
 
   // Toggle Task
   const toggleComplete = (createAt: number) => {
-    console.log(createAt);
-
     const updatedTodos = todos.map((todo) =>
       todo.createAt === createAt
         ? { ...todo, isCompleted: !todo.isCompleted }
@@ -69,7 +66,6 @@ function TodoList() {
   // Edit Todo
   const handleEdit = (createAt: number) => {
     setEditIndex(createAt);
-    alert(todos.find((todo) => todo.createAt === createAt));
     const editTodo = todos.find((todo) => todo.createAt === createAt);
     if (editTodo) {
       console.log(editTodo);
@@ -114,7 +110,7 @@ function TodoList() {
                 onChange={(event) => setInputValue(event.target.value)}
               />
               <button className="bg-green-400 py-2 px-5 rounded-md hover:bg-green-500 transition-all duration-300">
-                Add
+                {editIndex !== null ? "Update" : "Add"}
               </button>
             </form>
             <p
@@ -167,9 +163,9 @@ function TodoList() {
               <div>
                 <div className="flex gap-2"></div>
                 <ul>
-                  {filteredTodo.map((todo, i) => (
+                  {filteredTodo.map((todo) => (
                     <li
-                      key={i}
+                      key={todo.createAt}
                       className="flex justify-between items-center mb-3 shadow-md border px-2 py-2 rounded-md"
                     >
                       <div className="flex items-center gap-1.5">
@@ -196,8 +192,13 @@ function TodoList() {
                           Edit
                         </button>
                         <button
-                          className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium text-white"
+                          className={`px-3 py-1.5 rounded-md text-sm font-medium text-white ${
+                            todo.createAt !== editIndex
+                              ? "bg-red-600"
+                              : "bg-red-900 cursor-not-allowed"
+                          }`}
                           onClick={() => deleteTodo(todo.createAt)}
+                          disabled={todo.createAt === editIndex}
                         >
                           Delete
                         </button>
