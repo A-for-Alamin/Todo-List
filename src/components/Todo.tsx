@@ -1,3 +1,4 @@
+import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 interface Todo {
   text: string;
@@ -123,45 +124,45 @@ function TodoList() {
           </div>
 
           <div className="bg-white p-5 rounded-lg">
-            <div className="flex gap-2.5">
-              <button
-                onClick={() => setFilterTodo("all")}
-                className="hover:text-blue-400"
+            <div className="flex justify-between pb-3 border-b border-gray-600/50">
+              <Select
+                className="max-w-[7.6rem]"
+                label="Filter"
+                size="sm"
+                labelPlacement="outside"
+                defaultSelectedKeys={["ss"]}
               >
-                All
-              </button>
-              <button
-                onClick={() => setFilterTodo("complete")}
-                className="hover:text-blue-400"
-              >
-                Complete
-              </button>
-              <button
-                onClick={() => setFilterTodo("incomplete")}
-                className="hover:text-blue-400"
-              >
-                Incomplete
-              </button>
+                <SelectItem onClick={() => setFilterTodo("all")}>
+                  All
+                </SelectItem>
+                <SelectItem onClick={() => setFilterTodo("complete")}>
+                  Completed
+                </SelectItem>
+                <SelectItem onClick={() => setFilterTodo("incomplete")}>
+                  Incomplet
+                </SelectItem>
+              </Select>
 
-              <button
-                onClick={() => setSortOrder("new-to-old")}
-                className="hover:text-blue-400 ms-10"
+              <Select
+                className="max-w-[7.6rem]"
+                label="Sort by"
+                size="sm"
+                labelPlacement="outside"
+                defaultSelectedKeys={["New to old"]}
               >
-                New 2 Old
-              </button>
-              <button
-                onClick={() => setSortOrder("old-to-new")}
-                className="hover:text-blue-400"
-              >
-                Old 2 new
-              </button>
+                <SelectItem onClick={() => setSortOrder("new-to-old")}>
+                  New to old
+                </SelectItem>
+                <SelectItem onClick={() => setSortOrder("old-to-new")}>
+                  Old to new
+                </SelectItem>
+              </Select>
             </div>
 
             {filteredTodo.length === 0 ? (
               <p className="text-slate-600 text-center">No Task Yet ....</p>
             ) : (
-              <div>
-                <div className="flex gap-2"></div>
+              <div className="pt-2">
                 <ul>
                   {filteredTodo.map((todo) => (
                     <li
