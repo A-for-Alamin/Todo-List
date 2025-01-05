@@ -7,8 +7,8 @@ interface Todo {
 
 function TodoList() {
   const [inputValue, setInputValue] = useState("");
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  // Correctly set todos state to use Todo[]
   const [todos, setTodos] = useState<Todo[]>(() => {
     const savedTodos = localStorage.getItem("todos");
     return savedTodos ? JSON.parse(savedTodos) : [];
@@ -20,9 +20,18 @@ function TodoList() {
 
     if (inputValue.trim() === "") return;
 
-    const newTodo: Todo = { text: inputValue, isCompleted: false };
-    const updatedTodos = [...todos, newTodo];
-    setTodos(updatedTodos);
+    if (editIndex !== null) {
+      const updatedTodos = todos.map((todo, index) =>
+        index === editIndex ? { ...todo, text: inputValue } : todo
+      );
+      setTodos(updatedTodos);
+      setEditIndex(null);
+    } else {
+      const newTodo: Todo = { text: inputValue, isCompleted: false };
+      const updatedTodos = [...todos, newTodo];
+      setTodos(updatedTodos);
+    }
+
     setInputValue("");
   };
 
@@ -38,6 +47,12 @@ function TodoList() {
   const deleteTodo = (i: number) => {
     const updatedTodos = todos.filter((_, index) => index !== i);
     setTodos(updatedTodos);
+  };
+
+  // Edit Todo
+  const handleEdit = (i: number) => {
+    setEditIndex(i); // Set the index of the task being edited
+    setInputValue(todos[i].text); // Set the input value to the current task text
   };
 
   // Save todos to localStorage whenever todos state changes
@@ -98,7 +113,10 @@ function TodoList() {
                         </span>
                       </div>
                       <div className="space-x-2">
-                        <button className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium">
+                        <button
+                          className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium"
+                          onClick={() => handleEdit(i)}
+                        >
                           Edit
                         </button>
                         <button
