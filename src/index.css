@@ -1,6 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  user-select: none;
+}
 
 .todo-scroll::-webkit-scrollbar {
   width: 0.35rem;

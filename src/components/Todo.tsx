@@ -99,7 +99,7 @@ function TodoList() {
       <section className="h-screen bg-[url(vite.svg)] flex justify-center items-center">
         <div className="w-[27rem] space-y-5">
           <div className="bg-white p-5 rounded-lg">
-            <h1 className="text-2xl font-bold mb-4 text-black/80">
+            <h1 className="text-3xl font-bold mb-4 text-black/80 font-[Pacifico]">
               Smart To-Do List
             </h1>
             <form
@@ -170,7 +170,9 @@ function TodoList() {
                   {filteredTodo.map((todo) => (
                     <li
                       key={todo.createAt}
-                      className="flex justify-between items-center mb-3 shadow-md border px-2 py-2 rounded-md"
+                      className={`flex justify-between items-center mb-3 shadow-sm border px-2 py-2 rounded-md ${
+                        todo.isCompleted ? "bg-rose-200" : "bg-green-200"
+                      }`}
                     >
                       <div className="flex items-center gap-1.5">
                         <input
@@ -190,7 +192,7 @@ function TodoList() {
                       </div>
                       <div className="space-x-2">
                         <button
-                          className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium text-white"
+                          className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 transition-all rounded-md text-sm font-medium text-white"
                           onClick={() => handleEdit(todo.createAt)}
                         >
                           Edit
@@ -198,7 +200,7 @@ function TodoList() {
                         <button
                           className={`px-3 py-1.5 rounded-md text-sm font-medium text-white ${
                             todo.createAt !== editIndex
-                              ? "bg-red-600"
+                              ? "bg-red-600 hover:bg-red-700 transition-all"
                               : "bg-red-900 cursor-not-allowed"
                           }`}
                           onClick={() => deleteTodo(todo.createAt)}
