@@ -1,5 +1,7 @@
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { BiSort } from "react-icons/bi";
+
 interface Todo {
   text: string;
   isCompleted: boolean;
@@ -132,13 +134,13 @@ function TodoList() {
                 labelPlacement="outside"
                 defaultSelectedKeys={["ss"]}
               >
-                <SelectItem onClick={() => setFilterTodo("all")}>
+                <SelectItem onPress={() => setFilterTodo("all")}>
                   All
                 </SelectItem>
-                <SelectItem onClick={() => setFilterTodo("complete")}>
+                <SelectItem onPress={() => setFilterTodo("complete")}>
                   Completed
                 </SelectItem>
-                <SelectItem onClick={() => setFilterTodo("incomplete")}>
+                <SelectItem onPress={() => setFilterTodo("incomplete")}>
                   Incomplet
                 </SelectItem>
               </Select>
@@ -148,12 +150,13 @@ function TodoList() {
                 label="Sort by"
                 size="sm"
                 labelPlacement="outside"
+                startContent={<BiSort />}
                 defaultSelectedKeys={["New to old"]}
               >
-                <SelectItem onClick={() => setSortOrder("new-to-old")}>
+                <SelectItem onPress={() => setSortOrder("new-to-old")}>
                   New to old
                 </SelectItem>
-                <SelectItem onClick={() => setSortOrder("old-to-new")}>
+                <SelectItem onPress={() => setSortOrder("old-to-new")}>
                   Old to new
                 </SelectItem>
               </Select>
