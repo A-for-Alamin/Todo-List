@@ -132,7 +132,6 @@ function TodoList() {
                 label="Filter"
                 size="sm"
                 labelPlacement="outside"
-                defaultSelectedKeys={["ss"]}
               >
                 <SelectItem onPress={() => setFilterTodo("all")}>
                   All
@@ -151,7 +150,6 @@ function TodoList() {
                 size="sm"
                 labelPlacement="outside"
                 startContent={<BiSort />}
-                defaultSelectedKeys={["New to old"]}
               >
                 <SelectItem onPress={() => setSortOrder("new-to-old")}>
                   New to old
