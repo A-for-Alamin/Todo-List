@@ -96,7 +96,7 @@ function TodoList() {
 
   return (
     <>
-      <section className="h-screen bg-[url(vite.svg)] flex justify-center items-center">
+      <section className="h-screen bg-[url(/bg.svg)] flex justify-center items-center">
         <div className="w-[27rem] space-y-5">
           <div className="bg-white p-5 rounded-lg">
             <h1 className="text-3xl font-bold mb-4 text-black/80 font-[Pacifico]">
