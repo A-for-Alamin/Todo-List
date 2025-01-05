@@ -9,6 +9,9 @@ function TodoList() {
   const [inputValue, setInputValue] = useState("");
   const [empty, setEmpty] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [filterTodo, setFilterTodo] = useState<
+    "all" | "complete" | "incomplete"
+  >("all");
 
   const [todos, setTodos] = useState<Todo[]>(() => {
     const savedTodos = localStorage.getItem("todos");
@@ -57,6 +60,13 @@ function TodoList() {
     setInputValue(todos[i].text); // Set the input value to the current task text
   };
 
+  // Filtered Todo List
+  const filteredTodo = todos.filter((todo) => {
+    if (filterTodo === "complete") return todo.isCompleted;
+    if (filterTodo === "incomplete") return !todo.isCompleted;
+    return true;
+  });
+
   // Save todos to localStorage whenever todos state changes
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -94,12 +104,34 @@ function TodoList() {
           </div>
 
           <div className="bg-white p-5 rounded-lg">
-            {todos.length === 0 ? (
+            <div className="flex gap-2.5">
+              <button
+                onClick={() => setFilterTodo("all")}
+                className="hover:text-blue-400"
+              >
+                All
+              </button>
+              <button
+                onClick={() => setFilterTodo("complete")}
+                className="hover:text-blue-400"
+              >
+                Complete
+              </button>
+              <button
+                onClick={() => setFilterTodo("incomplete")}
+                className="hover:text-blue-400"
+              >
+                Incomplete
+              </button>
+            </div>
+
+            {filteredTodo.length === 0 ? (
               <p className="text-slate-600 text-center">No Task Yet ....</p>
             ) : (
               <div>
+                <div className="flex gap-2"></div>
                 <ul>
-                  {todos.map((todo, i) => (
+                  {filteredTodo.map((todo, i) => (
                     <li
                       key={i}
                       className="flex justify-between items-center mb-3 shadow-md border px-2 py-2 rounded-md"
