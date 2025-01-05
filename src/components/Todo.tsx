@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 interface Todo {
   text: string;
   isCompleted: boolean;
+  createAt: number;
 }
 
 function TodoList() {
@@ -12,6 +13,9 @@ function TodoList() {
   const [filterTodo, setFilterTodo] = useState<
     "all" | "complete" | "incomplete"
   >("all");
+  const [sortOrder, setSortOrder] = useState<"new-to-old" | "old-to-new">(
+    "new-to-old"
+  );
 
   const [todos, setTodos] = useState<Todo[]>(() => {
     const savedTodos = localStorage.getItem("todos");
@@ -25,13 +29,17 @@ function TodoList() {
     if (inputValue.trim() === "") return setEmpty(true);
 
     if (editIndex !== null) {
-      const updatedTodos = todos.map((todo, index) =>
-        index === editIndex ? { ...todo, text: inputValue } : todo
+      const updatedTodos = todos.map((todo) =>
+        todo.createAt === editIndex ? { ...todo, text: inputValue } : todo
       );
       setTodos(updatedTodos);
       setEditIndex(null);
     } else {
-      const newTodo: Todo = { text: inputValue, isCompleted: false };
+      const newTodo: Todo = {
+        text: inputValue,
+        isCompleted: false,
+        createAt: Date.now(),
+      };
       const updatedTodos = [...todos, newTodo];
       setTodos(updatedTodos);
     }
@@ -41,31 +49,46 @@ function TodoList() {
   };
 
   // Toggle Task
-  const toggleComplete = (i: number) => {
-    const updatedTodos = todos.map((todo, index) =>
-      index === i ? { ...todo, isCompleted: !todo.isCompleted } : todo
+  const toggleComplete = (createAt: number) => {
+    console.log(createAt);
+
+    const updatedTodos = todos.map((todo) =>
+      todo.createAt === createAt
+        ? { ...todo, isCompleted: !todo.isCompleted }
+        : todo
     );
     setTodos(updatedTodos);
   };
 
   // Delete Todo
-  const deleteTodo = (i: number) => {
-    const updatedTodos = todos.filter((_, index) => index !== i);
+  const deleteTodo = (createAt: number) => {
+    const updatedTodos = todos.filter((todo) => todo.createAt !== createAt);
     setTodos(updatedTodos);
   };
 
   // Edit Todo
-  const handleEdit = (i: number) => {
-    setEditIndex(i); // Set the index of the task being edited
-    setInputValue(todos[i].text); // Set the input value to the current task text
+  const handleEdit = (createAt: number) => {
+    setEditIndex(createAt);
+    alert(todos.find((todo) => todo.createAt === createAt));
+    const editTodo = todos.find((todo) => todo.createAt === createAt);
+    if (editTodo) {
+      console.log(editTodo);
+
+      setInputValue(editTodo.text);
+    }
   };
 
   // Filtered Todo List
-  const filteredTodo = todos.filter((todo) => {
-    if (filterTodo === "complete") return todo.isCompleted;
-    if (filterTodo === "incomplete") return !todo.isCompleted;
-    return true;
-  });
+  const filteredTodo = [...todos]
+    .filter((todo) => {
+      if (filterTodo === "complete") return todo.isCompleted;
+      if (filterTodo === "incomplete") return !todo.isCompleted;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "new-to-old") return b.createAt - a.createAt;
+      return a.createAt - b.createAt;
+    });
 
   // Save todos to localStorage whenever todos state changes
   useEffect(() => {
@@ -123,6 +146,19 @@ function TodoList() {
               >
                 Incomplete
               </button>
+
+              <button
+                onClick={() => setSortOrder("new-to-old")}
+                className="hover:text-blue-400 ms-10"
+              >
+                New 2 Old
+              </button>
+              <button
+                onClick={() => setSortOrder("old-to-new")}
+                className="hover:text-blue-400"
+              >
+                Old 2 new
+              </button>
             </div>
 
             {filteredTodo.length === 0 ? (
@@ -140,7 +176,7 @@ function TodoList() {
                         <input
                           type="checkbox"
                           checked={todo.isCompleted}
-                          onChange={() => toggleComplete(i)}
+                          onChange={() => toggleComplete(todo.createAt)}
                         />
                         <span
                           className={`${
@@ -155,13 +191,13 @@ function TodoList() {
                       <div className="space-x-2">
                         <button
                           className="px-3 py-1.5 bg-blue-500 rounded-md text-sm font-medium text-white"
-                          onClick={() => handleEdit(i)}
+                          onClick={() => handleEdit(todo.createAt)}
                         >
                           Edit
                         </button>
                         <button
                           className="px-3 py-1.5 bg-red-600 rounded-md text-sm font-medium text-white"
-                          onClick={() => deleteTodo(i)}
+                          onClick={() => deleteTodo(todo.createAt)}
                         >
                           Delete
                         </button>
